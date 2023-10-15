@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@chakra-ui/icons':
+    specifier: ^2.1.1
+    version: 2.1.1(@chakra-ui/system@2.6.1)(react@18.2.0)
   '@chakra-ui/react':
     specifier: ^2.8.1
     version: 2.8.1(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(@types/react@18.2.27)(framer-motion@10.16.4)(react-dom@18.2.0)(react@18.2.0)
@@ -23,6 +26,18 @@ dependencies:
   '@fontsource/plus-jakarta-sans':
     specifier: ^5.0.15
     version: 5.0.15
+  '@pioneer-platform/pioneer-coins':
+    specifier: ^8.1.86
+    version: 8.1.86(@types/node@20.8.4)
+  '@pioneer-platform/swapkit-api':
+    specifier: ^3.0.1
+    version: 3.0.1
+  '@pioneer-platform/swapkit-entities':
+    specifier: ^3.0.1
+    version: 3.0.1(bignumber.js@9.1.2)
+  '@pioneer-platform/types':
+    specifier: ^3.0.1
+    version: 3.0.1
   '@pioneer-sdk/pioneer-react':
     specifier: ^0.0.18
     version: >-

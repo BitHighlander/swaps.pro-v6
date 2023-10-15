@@ -1,3 +1,5 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { SettingsIcon, AddIcon } from "@chakra-ui/icons";
 import {
   Button,
   useDisclosure,
@@ -8,66 +10,123 @@ import {
   ModalOverlay,
   ModalContent,
   ModalHeader,
-  Tabs,
-  TabList,
-  TabPanels,
-  Tab,
-  TabPanel,
+  Flex,
+  Box,
+  SimpleGrid, // Add SimpleGrid
 } from "@chakra-ui/react";
+// import { COIN_MAP_LONG } from "@pioneer-platform/pioneer-coins";
 // eslint-disable-next-line import/no-extraneous-dependencies
+import { FeeOption } from "@pioneer-platform/types";
 import { usePioneer } from "@pioneer-sdk/pioneer-react";
 import { useEffect, useState } from "react";
 
-// import AssetSelect from "lib/components/AssetSelect";
-// import OutputSelect from "lib/components/OutputSelect";
-// import BlockchainSelect from "lib/components/BlockchainSelect";
-// import WalletSelect from "lib/components/WalletSelect";
-import Basic from "./components/Basic";
-// import Balances from "./components/Balances";
-// // import Pubkeys from "./components/Pubkeys";
-// import Transfer from "./components/Transfer";
-// import Swap from "./components/Swap";
+// import backgroundImage from "lib/assets/background/thorfox.webp"; // Adjust the path
+// import ForkMeBanner from "lib/components/ForkMe";
+import BeginSwap from "./steps/BeginSwap"; // Updated import here
+import CompleteSwap from "./steps/CompleteSwap"; // Updated import here
+import SelectAssets from "./steps/SelectAssets"; // Updated import here
 
 const Home = () => {
   const { state } = usePioneer();
-  const {
-    // api,
-    // app,
-    // context,
-    // assetContext,
-    // blockchainContext,
-    pubkeyContext,
-    // modals,
-  } = state;
-  const [address, setAddress] = useState("");
-  const [modalType] = useState("");
-  const { isOpen, onClose } = useDisclosure();
+  const { app, assetContext, outboundAssetContext, blockchainContext } = state;
+  // steps
+  const [step, setStep] = useState(0);
+  const [modalType, setModalType] = useState(null);
+  const [txHash, setTxhash] = useState(null);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [selectedButton, setSelectedButton] = useState("quick"); // Initial selected button is "Quick"
+  const [isContinueDisabled, setIsContinueDisabled] = useState(true); // Initial continue button is disabled
+  const handleClick = (button: any) => {
+    setSelectedButton(button);
+  };
+  const [continueButtonContent, setContinueButtonContent] =
+    useState("Continue"); // Initial continue button content is "Continue"
+  // const [assets] = useState([]); // Array to store assets
+  const [showGoBack, setShowGoBack] = useState(false);
 
   useEffect(() => {
-    if (pubkeyContext)
-      setAddress(
-        pubkeyContext?.master || pubkeyContext?.pubkey || pubkeyContext
-      );
-  }, [pubkeyContext]);
+    if (
+      app &&
+      app.swapKit &&
+      assetContext &&
+      outboundAssetContext &&
+      step === 0
+    ) {
+      setIsContinueDisabled(false);
+    }
+  }, [app, assetContext, blockchainContext, outboundAssetContext, step]);
 
-  // const openModal = (type: any) => {
-  //   setModalType(type);
-  //   onOpen();
-  // };
+  useEffect(() => {
+    if (step === 0) {
+      setShowGoBack(false);
+    }
+    if (step === 1) {
+      setContinueButtonContent("Sign Transaction");
+    }
+  }, [step]);
 
-  const refresh = async () => {
-    // TODO why do I need to press refresh?
-    // console.log("2 pubkeyContext: ", pubkeyContext);
-    // console.log("2 balances: ", app.balances);
-    if (pubkeyContext)
-      setAddress(
-        pubkeyContext?.master || pubkeyContext?.pubkey || pubkeyContext
-      );
-    // console.log("pubkeyContext: ", pubkeyContext);
+  const openModal = (type: any) => {
+    setModalType(type);
+    onOpen();
+  };
+
+  const handleClickContinue = () => {
+    try {
+      if (step === 0) {
+        setStep((prevStep) => prevStep + 1);
+        setShowGoBack(true);
+        return;
+      }
+      if (step === 1) {
+        const swapParams = {
+          recipient: assetContext.address,
+          feeOptionKey: FeeOption.Fast,
+        };
+        console.log("swapParams: ", swapParams);
+        // console.log("swapKit: ", swapKit);
+        // const txHash = await swapKit.swap(swapParams);
+        console.log("txHash: ", txHash);
+        setTxhash(txHash);
+        setStep((prevStep) => prevStep + 1);
+      }
+      if (step === 1) {
+        // check if confirmed
+        // if confirmed
+        // setStep((prevStep) => prevStep + 1)
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const goBack = () => {
+    setStep((prevStep) => prevStep - 1);
+  };
+
+  const renderStepContent = () => {
+    console.log("step: ", step);
+    switch (step) {
+      case 0:
+        return (
+          <SelectAssets
+            openModal={openModal}
+            handleClick={handleClick}
+            selectedButton={selectedButton}
+          />
+        );
+      case 1:
+        return <BeginSwap />;
+      case 2:
+        return <CompleteSwap txHash={txHash} />;
+      default:
+        setStep(0);
+        return "true";
+    }
   };
 
   return (
     <div>
+      {/* <ForkMeBanner /> */}
       <Modal isOpen={isOpen} onClose={() => onClose()} size="xl">
         <ModalOverlay />
         <ModalContent>
@@ -75,24 +134,9 @@ const Home = () => {
           <ModalCloseButton />
           <ModalBody>
             {/* Render content based on modalType */}
-            {/* {modalType === "Select wallet" && ( */}
-            {/*  <div> */}
-            {/*    <WalletSelect onClose={onClose}></WalletSelect> */}
-            {/*  </div> */}
-            {/* )} */}
             {/* {modalType === "Select Asset" && ( */}
             {/*  <div> */}
-            {/*    <AssetSelect onClose={onClose} onlyOwned={true}></AssetSelect> */}
-            {/*  </div> */}
-            {/* )} */}
-            {/* {modalType === "Select Blockchain" && ( */}
-            {/*  <div> */}
-            {/*    <BlockchainSelect onClose={onClose}></BlockchainSelect> */}
-            {/*  </div> */}
-            {/* )} */}
-            {/* {modalType === "View Address" && ( */}
-            {/*  <div> */}
-            {/*    {JSON.stringify(pubkeyContext)} address: {address} */}
+            {/*    <AssetSelect onClose={onClose} /> */}
             {/*  </div> */}
             {/* )} */}
             {/* {modalType === "Select Outbound" && ( */}
@@ -108,37 +152,68 @@ const Home = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-      {address}
-      <Tabs>
-        <TabList>
-          <Tab>Context</Tab>
-          <Tab>balances</Tab>
-          <Tab>Transfer</Tab>
-          <Tab>Swaps</Tab>
-          <Tab>Earn</Tab>
-          <Tab>Borrow</Tab>
-        </TabList>
-
-        <TabPanels>
-          <TabPanel>
-            <Basic />
-          </TabPanel>
-          <TabPanel>
-            {/* <Balances openModal={openModal}></Balances> */}
-          </TabPanel>
-          <TabPanel>
-            {/* <Transfer openModal={openModal}></Transfer> */}
-          </TabPanel>
-          <TabPanel>{/* <Swap openModal={openModal}></Swap> */}</TabPanel>
-          <TabPanel>
-            <p>Earn</p>
-          </TabPanel>
-          <TabPanel>
-            <p>Borrow</p>
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
-      <Button onClick={refresh}>refresh</Button>
+      <Box
+        w="35rem"
+        mx="auto"
+        mt="5rem"
+        boxShadow="rgb(0 0 0 / 8%) 0rem 0.37rem 0.62rem"
+        borderRadius="1.37rem 1.37rem 0 0"
+        bg="black"
+      >
+        <Flex
+          alignItems="center"
+          p="1rem 1.25rem 0.5rem"
+          color="rgb(86, 90, 105)"
+          justifyContent="space-between"
+        >
+          <h1>Swap</h1>
+          <SettingsIcon
+            fontSize="1.25rem"
+            cursor="pointer"
+            _hover={{ color: "rgb(128,128,128)" }}
+            onClick={() => openModal("settings")}
+          />
+        </Flex>
+        {renderStepContent()}
+      </Box>
+      <Flex
+        w="35rem"
+        mx="auto"
+        flexDirection="column"
+        alignItems="center"
+        bg="black"
+        p="2rem"
+      >
+        <SimpleGrid columns={2} spacing={4} width="full" mb={4}>
+          {/* {assets.map((asset: any) => ( */}
+          {/*  <Button */}
+          {/*    key={asset.network} */}
+          {/*    onClick={() => setSelectedButton(asset.network)} */}
+          {/*    colorScheme={selectedButton === asset.network ? "blue" : "gray"} */}
+          {/*    variant={selectedButton === asset.network ? "solid" : "outline"} */}
+          {/*    width="100%" */}
+          {/*  > */}
+          {/*    {asset.network} */}
+          {/*  </Button> */}
+          {/* ))} */}
+        </SimpleGrid>
+        <Button
+          onClick={() => handleClickContinue()}
+          leftIcon={<AddIcon />}
+          colorScheme="blue"
+          isDisabled={isContinueDisabled}
+          mt={4}
+        >
+          {continueButtonContent}
+        </Button>
+        {showGoBack ? (
+          <div>
+            <Button onClick={goBack}>Go Back</Button>
+          </div>
+        ) : (
+          <div />
+        )}
+      </Flex>
     </div>
   );
 };
