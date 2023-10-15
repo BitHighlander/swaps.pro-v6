@@ -11,8 +11,8 @@ const Footer = () => {
     >
       <Text fontSize="xs">
         {new Date().getFullYear()} -{" "}
-        <Link href="https://sznm.dev" isExternal>
-          sznm.dev
+        <Link href="https://pioneers.dev" isExternal>
+          <small>build by the CoinMasters Guild</small>
         </Link>
       </Text>
     </Flex>
