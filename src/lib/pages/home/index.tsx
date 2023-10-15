@@ -24,7 +24,7 @@ import { useEffect, useState } from "react";
 // import ForkMeBanner from "lib/components/ForkMe";
 import BeginSwap from "./steps/BeginSwap"; // Updated import here
 import CompleteSwap from "./steps/CompleteSwap"; // Updated import here
-import SelectAssets from "./steps/SelectAssets"; // Updated import here
+import SelectAssets from "./steps/SelectAssets";
 
 const Home = () => {
   const { state } = usePioneer();
@@ -125,7 +125,7 @@ const Home = () => {
   };
 
   return (
-    <div>
+    <Box>
       {/* <ForkMeBanner /> */}
       <Modal isOpen={isOpen} onClose={() => onClose()} size="xl">
         <ModalOverlay />
@@ -214,7 +214,7 @@ const Home = () => {
           <div />
         )}
       </Flex>
-    </div>
+    </Box>
   );
 };
 
