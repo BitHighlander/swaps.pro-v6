@@ -19,11 +19,11 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { usePioneer } from "@pioneer-sdk/pioneer-react";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function AssetSelect({ onClose }: any) {
   const { state } = usePioneer();
-  const { api, app, user } = state;
+  const { app, balances } = state;
   const [currentPage, setCurrentPage] = useState([]);
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [showOwnedAssets, setShowOwnedAssets] = useState(false);
@@ -63,27 +63,24 @@ export default function AssetSelect({ onClose }: any) {
   //   }
   // };
 
-  const fetchPage = async (pageIndex: number) => {
+  const fetchPage = async () => {
     try {
-      const search = {
-        limit: itemsPerPage,
-        skip: pageIndex * itemsPerPage,
-        collection: "assets",
-        ownedBy: showOwnedAssets ? user.id : undefined,
-      };
-
-      const info = await api.SearchAtlas(search);
-      const currentPageData = info.data.results;
-      setCurrentPage(currentPageData);
-      setTotalAssets(info.data.total); // Update total assets count
+      if (balances) {
+        setShowOwnedAssets(true);
+        setCurrentPage(balances);
+        // load balances
+        console.log("balances: ", balances);
+        // setCurrentPage(currentPageData);
+        setTotalAssets(balances.length); // Update total assets count
+      }
     } catch (e) {
       console.error(e);
     }
   };
 
   useEffect(() => {
-    fetchPage(currentPageIndex);
-  }, [currentPageIndex, showOwnedAssets]);
+    fetchPage();
+  }, [balances]);
 
   return (
     <Stack spacing={4}>

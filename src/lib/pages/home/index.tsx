@@ -20,6 +20,8 @@ import { FeeOption } from "@pioneer-platform/types";
 import { usePioneer } from "@pioneer-sdk/pioneer-react";
 import { useEffect, useState } from "react";
 
+import AssetSelect from "lib/components/AssetSelect";
+
 // import backgroundImage from "lib/assets/background/thorfox.webp"; // Adjust the path
 // import ForkMeBanner from "lib/components/ForkMe";
 import BeginSwap from "./steps/BeginSwap"; // Updated import here
@@ -66,6 +68,8 @@ const Home = () => {
   }, [step]);
 
   const openModal = (type: any) => {
+    // @ts-ignore
+    console.log(`TESTING BRO ${import.meta.env.VITE_BLOCKCHAIR_API_KEY}`);
     setModalType(type);
     onOpen();
   };
@@ -134,11 +138,11 @@ const Home = () => {
           <ModalCloseButton />
           <ModalBody>
             {/* Render content based on modalType */}
-            {/* {modalType === "Select Asset" && ( */}
-            {/*  <div> */}
-            {/*    <AssetSelect onClose={onClose} /> */}
-            {/*  </div> */}
-            {/* )} */}
+            {modalType === "Select Asset" && (
+              <div>
+                <AssetSelect onClose={onClose} />
+              </div>
+            )}
             {/* {modalType === "Select Outbound" && ( */}
             {/*  <div> */}
             {/*    <OutputSelect onClose={onClose} onlyOwned={false}></OutputSelect> */}

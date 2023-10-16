@@ -1,3 +1,9 @@
+/*
+      Vite Config
+ */
+import dotenv from 'dotenv';
+
+dotenv.config();
 /* eslint-disable import/no-extraneous-dependencies */
 import react from "@vitejs/plugin-react";
 import million from "million/compiler";
@@ -42,7 +48,9 @@ export default defineConfig({
     }
   },
   define: {
-    'process.env': {}
+    'process.env': {},
+    'process.env.VITE_BLOCKCHAIR_API_KEY': JSON.stringify(process.env.VITE_BLOCKCHAIR_API_KEY),
+    'process.env.VITE_WALLET_CONNECT_PROJECT_ID': JSON.stringify(process.env.VITE_WALLET_CONNECT_PROJECT_ID)
   },
   build:{
     minify: false,
