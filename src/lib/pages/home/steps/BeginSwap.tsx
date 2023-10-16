@@ -3,26 +3,22 @@ import { Box, HStack, Button } from "@chakra-ui/react";
 // import type { QuoteRoute } from "@pioneer-platform/swapkit-api";
 
 // // // eslint-disable-next-line import/no-extraneous-dependencies
-// // import { SwapKitApi } from "@pioneer-platform/swapkit-api";
+import { SwapKitApi } from "@pioneer-platform/swapkit-api";
 // // eslint-disable-next-line import/no-extraneous-dependencies
-// import type { Amount } from "@pioneer-platform/swapkit-entities";
+import { Amount } from "@pioneer-platform/swapkit-entities";
 // // eslint-disable-next-line import/no-extraneous-dependencies
 // import { FeeOption } from "@pioneer-platform/types";
-// import { usePioneer } from "@pioneer-sdk/pioneer-react";
-import { useState } from "react";
+import { usePioneer } from "@pioneer-sdk/pioneer-react";
+import { useState, useEffect, useCallback } from "react";
 
-// const calculatingAnimation: any = (
-//   await import("lib/assets/gif/calculating.gif")
-// ).default;
+import CalculatingComponent from "lib/components/CalculatingComponent";
 
 const BeginSwap = () => {
-  // const { state } = usePioneer();
-  // const { app, assetContext, outboundAssetContext } = state;
+  const { state } = usePioneer();
+  const { app, assetContext, outboundAssetContext } = state;
   const [showGif, setShowGif] = useState(true);
-
-  // const [, setLoading] = useState(false);
   const [currentRouteIndex, setCurrentRouteIndex] = useState(0); // New state for current route index
-  // const [inputAmount, setInputAmount] = useState<Amount | undefined>();
+  const [inputAmount, setInputAmount] = useState<Amount | undefined>();
 
   const [routes, setRoutes] = useState<any[]>([]);
 
@@ -40,48 +36,43 @@ const BeginSwap = () => {
     }
   };
 
-  // const fetchQuote = useCallback(async () => {
-  //   console.log("fetchQuote: ", fetchQuote);
-  //   if (!assetContext || !outboundAssetContext || !app || !app.swapKit)
-  //     alert("unable to get quote! app in poor state!");
-  //   setLoading(true);
-  //   setRoutes([]);
-  //
-  //   // default = max amount
-  //   console.log("balance: ", assetContext.assetAmount.toString());
-  //
-  //   // YOLO balance as amount?
-  //   const amountSelect = parseFloat(assetContext.assetAmount.toString());
-  //   console.log("amountSelect: ", amountSelect);
-  //   const amountSelectAsset = Amount.fromNormalAmount(amountSelect);
-  //   setInputAmount(amountSelectAsset);
-  //   const senderAddress = app.swapKit.getAddress(assetContext.asset.L1Chain);
-  //   const recipientAddress = app.swapKit.getAddress(
-  //     outboundAssetContext.asset.L1Chain
-  //   );
-  //   console.log("assetContext: ", assetContext);
-  //   console.log("outboundAssetContext: ", outboundAssetContext);
-  //
-  //   try {
-  //     const entry = {
-  //       sellAsset: assetContext.asset.toString(),
-  //       sellAmount: amountSelectAsset.assetAmount.toString(),
-  //       buyAsset: outboundAssetContext.asset.toString(),
-  //       senderAddress,
-  //       recipientAddress,
-  //       slippage: "3",
-  //     };
-  //     console.log("entry: ", entry);
-  //     // eslint-disable-next-line @typescript-eslint/no-shadow
-  //     const { routes } = await SwapKitApi.getQuote(entry);
-  //     console.log("routes: ", routes);
-  //     setRoutes(routes || []);
-  //   } catch (e) {
-  //     console.error("ERROR: ", e);
-  //     alert(`Failed to get quote! ${e.message}`);
-  //     setLoading(false);
-  //   }
-  // }, [assetContext, outboundAssetContext, app]);
+  const fetchQuote = useCallback(async () => {
+    console.log("fetchQuote: ", fetchQuote);
+
+    // default = max amount
+    console.log("balance: ", assetContext.assetAmount.toString());
+
+    // YOLO balance as amount?
+    const amountSelect = parseFloat(assetContext.assetAmount.toString());
+    console.log("amountSelect: ", amountSelect);
+    const amountSelectAsset = Amount.fromNormalAmount(amountSelect);
+    setInputAmount(amountSelectAsset);
+    const senderAddress = app.swapKit.getAddress(assetContext.asset.L1Chain);
+    const recipientAddress = app.swapKit.getAddress(
+      outboundAssetContext.asset.L1Chain
+    );
+    console.log("assetContext: ", assetContext);
+    console.log("outboundAssetContext: ", outboundAssetContext);
+
+    try {
+      const entry = {
+        sellAsset: assetContext.asset.toString(),
+        sellAmount: amountSelectAsset.assetAmount.toString(),
+        buyAsset: outboundAssetContext.asset.toString(),
+        senderAddress,
+        recipientAddress,
+        slippage: "3",
+      };
+      console.log("entry: ", entry);
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      const { routes } = await SwapKitApi.getQuote(entry);
+      console.log("routes: ", routes);
+      setRoutes(routes || []);
+    } catch (e: any) {
+      console.error("ERROR: ", e);
+      // alert(`Failed to get quote! ${e.message}`);
+    }
+  }, [assetContext, outboundAssetContext, app]);
 
   // wait for routes
   // useEffect(() => {
@@ -99,9 +90,9 @@ const BeginSwap = () => {
   //   }
   // };
   //
-  // useEffect(() => {
-  //   buildSwap();
-  // }, []);
+  useEffect(() => {
+    fetchQuote();
+  }, [fetchQuote]);
 
   // const handleSwap = useCallback(
   //   async (route: QuoteRoute) => {
@@ -133,11 +124,11 @@ const BeginSwap = () => {
     <Box>
       {showGif ? (
         <Box>
-          Calculating Best Route...
-          {/* <img src={calculatingAnimation} alt="calculating" /> */}
+          <CalculatingComponent />
         </Box>
       ) : (
         <Box>
+          input: {inputAmount?.toString() || ""}
           {/* {routes && routes.length > 0 && ( */}
           {/*  <Card key={currentRouteIndex} mb={5}> */}
           {/*    <CardHeader> */}
@@ -145,7 +136,6 @@ const BeginSwap = () => {
           {/*        Route: {routes[currentRouteIndex].path || "N/A"} */}
           {/*      </Heading> */}
           {/*    </CardHeader> */}
-
           {/*    <CardBody> */}
           {/*      <Stack divider={<StackDivider />} spacing="4"> */}
           {/*        /!* Expected Output *!/ */}
@@ -157,7 +147,6 @@ const BeginSwap = () => {
           {/*        /!*    <Text>{routes[currentRouteIndex].expectedOutput}</Text> *!/ */}
           {/*        /!*  </Box> *!/ */}
           {/*        /!* )} *!/ */}
-
           {/*        /!* Fees *!/ */}
           {/*        /!* {routes[currentRouteIndex].fees && *!/ */}
           {/*        /!*  routes[currentRouteIndex].fees.THOR && ( *!/ */}
@@ -173,7 +162,6 @@ const BeginSwap = () => {
           {/*        /!*      ))} *!/ */}
           {/*        /!*    </Box> *!/ */}
           {/*        /!*  )} *!/ */}
-
           {/*        /!* Meta *!/ */}
           {/*        /!* {routes[currentRouteIndex].meta && ( *!/ */}
           {/*        /!*  <Box> *!/ */}
@@ -197,7 +185,6 @@ const BeginSwap = () => {
           {/*        /!*    </Text> *!/ */}
           {/*        /!*  </Box> *!/ */}
           {/*        /!* )} *!/ */}
-
           {/*        /!* Transaction *!/ */}
           {/*        {routes[currentRouteIndex].transaction && */}
           {/*          routes[currentRouteIndex].transaction.inputs && ( */}
