@@ -1,6 +1,16 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { ArrowUpDownIcon } from "@chakra-ui/icons";
-import { Button, Flex, Box, Text, HStack, Spinner } from "@chakra-ui/react";
+import {
+  Avatar,
+  Button,
+  Flex,
+  Box,
+  Text,
+  HStack,
+  Spinner,
+} from "@chakra-ui/react";
+// @ts-ignore
+import { COIN_MAP_LONG } from "@pioneer-platform/pioneer-coins";
 import { usePioneer } from "@pioneer-sdk/pioneer-react";
 import type React from "react";
 
@@ -52,10 +62,15 @@ const BeginSwap: React.FC<BeginSwapProps> = ({
               <Spinner size="lg" color="blue.500" />
             ) : (
               <>
-                {/* <Avatar size="xl" src={input.image} /> */}
-                <Box border="1px solid #fff" borderRadius="8px" width="100%">
-                  <Text>name: {assetContext?.asset?.name}</Text>
-                </Box>
+                <Avatar
+                  size="xl"
+                  src={`https://pioneers.dev/coins/${
+                    COIN_MAP_LONG[assetContext?.asset?.network]
+                  }.png`}
+                />
+                {/* <Box border="1px solid #fff" borderRadius="8px" width="100%"> */}
+                {/*  <Text>name: {assetContext?.asset?.name}</Text> */}
+                {/* </Box> */}
                 <Box border="1px solid #fff" borderRadius="8px" width="100%">
                   <Text>Network: {assetContext?.asset?.network}</Text>
                 </Box>
@@ -86,10 +101,15 @@ const BeginSwap: React.FC<BeginSwapProps> = ({
               <Spinner size="lg" color="blue.500" />
             ) : (
               <div>
-                {/* <Avatar size="xl" src={outboundAssetContext.image} /> */}
-                <Box border="1px solid #fff" borderRadius="8px" width="100%">
-                  <Text>name: {outboundAssetContext?.asset?.name}</Text>
-                </Box>
+                <Avatar
+                  size="xl"
+                  src={`https://pioneers.dev/coins/${
+                    COIN_MAP_LONG[outboundAssetContext?.asset?.network]
+                  }.png`}
+                />
+                {/* <Box border="1px solid #fff" borderRadius="8px" width="100%"> */}
+                {/*  <Text>name: {outboundAssetContext?.asset?.name}</Text> */}
+                {/* </Box> */}
                 <Box border="1px solid #fff" borderRadius="8px" width="100%">
                   <Text>Network: {outboundAssetContext?.asset?.network}</Text>
                 </Box>

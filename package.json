@@ -28,6 +28,7 @@
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
     "@fontsource/plus-jakarta-sans": "^5.0.15",
+    "@pioneer-platform/pioneer-caip": "^8.1.81",
     "@pioneer-platform/pioneer-coins": "^8.1.86",
     "@pioneer-platform/swapkit-api": "^3.0.1",
     "@pioneer-platform/swapkit-entities": "^3.0.1",

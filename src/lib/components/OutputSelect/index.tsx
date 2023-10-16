@@ -26,7 +26,7 @@ import { COIN_MAP_LONG } from "@pioneer-platform/pioneer-coins";
 import { usePioneer } from "@pioneer-sdk/pioneer-react";
 import { useState, useEffect } from "react";
 
-export default function AssetSelect({ onClose }: any) {
+export default function OutputSelect({ onClose }: any) {
   const { state } = usePioneer();
   const { app, balances } = state;
   const [currentPage, setCurrentPage] = useState([]);
@@ -38,7 +38,7 @@ export default function AssetSelect({ onClose }: any) {
 
   const handleSelectClick = async (asset: any) => {
     try {
-      app.setAssetContext(asset);
+      app.setOutboundAssetContext(asset);
       onClose();
     } catch (e) {
       console.error(e);

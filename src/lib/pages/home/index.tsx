@@ -21,6 +21,7 @@ import { usePioneer } from "@pioneer-sdk/pioneer-react";
 import { useEffect, useState } from "react";
 
 import AssetSelect from "lib/components/AssetSelect";
+import OutputSelect from "lib/components/OutputSelect";
 
 // import backgroundImage from "lib/assets/background/thorfox.webp"; // Adjust the path
 // import ForkMeBanner from "lib/components/ForkMe";
@@ -143,11 +144,11 @@ const Home = () => {
                 <AssetSelect onClose={onClose} />
               </div>
             )}
-            {/* {modalType === "Select Outbound" && ( */}
-            {/*  <div> */}
-            {/*    <OutputSelect onClose={onClose} onlyOwned={false}></OutputSelect> */}
-            {/*  </div> */}
-            {/* )} */}
+            {modalType === "Select Outbound" && (
+              <div>
+                <OutputSelect onClose={onClose} onlyOwned={false} />
+              </div>
+            )}
           </ModalBody>
           <ModalFooter>
             <Button colorScheme="blue" onClick={onClose}>
