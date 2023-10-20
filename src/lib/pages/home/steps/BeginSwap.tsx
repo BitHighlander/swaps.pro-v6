@@ -1,17 +1,11 @@
 // eslint-disable-next-line import/order
 import { Box, HStack, Button } from "@chakra-ui/react";
-// import type { QuoteRoute } from "@pioneer-platform/swapkit-api";
-
-// // // eslint-disable-next-line import/no-extraneous-dependencies
 import { SwapKitApi } from "@pioneer-platform/swapkit-api";
-// // eslint-disable-next-line import/no-extraneous-dependencies
 import { Amount } from "@pioneer-platform/swapkit-entities";
-// // eslint-disable-next-line import/no-extraneous-dependencies
-// import { FeeOption } from "@pioneer-platform/types";
-import { usePioneer } from "@pioneer-sdk/pioneer-react";
 import { useState, useEffect, useCallback } from "react";
 
 import CalculatingComponent from "lib/components/CalculatingComponent";
+import { usePioneer } from "lib/context/Pioneer";
 
 const BeginSwap = () => {
   const { state } = usePioneer();

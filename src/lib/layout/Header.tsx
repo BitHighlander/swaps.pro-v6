@@ -18,9 +18,10 @@ import {
   VStack,
   Badge,
 } from "@chakra-ui/react";
-import { usePioneer } from "@pioneer-sdk/pioneer-react";
 import { useState, useEffect } from "react";
 import { Link as RouterLink } from "react-router-dom";
+
+import { usePioneer } from "lib/context/Pioneer";
 
 const PROJECT_NAME = "Swaps.PRO";
 

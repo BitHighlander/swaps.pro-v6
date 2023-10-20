@@ -17,11 +17,11 @@ import {
 // import { COIN_MAP_LONG } from "@pioneer-platform/pioneer-coins";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { FeeOption } from "@pioneer-platform/types";
-import { usePioneer } from "@pioneer-sdk/pioneer-react";
 import { useEffect, useState } from "react";
 
 import AssetSelect from "lib/components/AssetSelect";
 import OutputSelect from "lib/components/OutputSelect";
+import { usePioneer } from "lib/context/Pioneer";
 
 // import backgroundImage from "lib/assets/background/thorfox.webp"; // Adjust the path
 // import ForkMeBanner from "lib/components/ForkMe";

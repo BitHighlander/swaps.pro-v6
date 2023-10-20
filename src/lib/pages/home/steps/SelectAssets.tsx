@@ -11,8 +11,9 @@ import {
 } from "@chakra-ui/react";
 // @ts-ignore
 import { COIN_MAP_LONG } from "@pioneer-platform/pioneer-coins";
-import { usePioneer } from "@pioneer-sdk/pioneer-react";
 import type React from "react";
+
+import { usePioneer } from "lib/context/Pioneer";
 
 interface BeginSwapProps {
   openModal: any; // Replace 'any' with the actual type of 'openModal'
